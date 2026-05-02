@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0a0f1e" />
+  <meta name="description" content="Second Chance Litigation Manual — A free interactive legal guide for Florida post-conviction appellate proceedings." />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Second Chance | Litigation Manual</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:       #0a0f1e;
+      --paper:     #f5f0e8;
+      --gold:      #c9a84c;
+      --gold-lt:   #e8d08a;
+      --rust:      #b84a2e;
+      --slate:     #2e3a52;
+      --mist:      #ddd8ce;
+      --white:     #ffffff;
+      --radius:    12px;
+      --ff-head:   'Playfair Display', Georgia, serif;
+      --ff-body:   'DM Sans', sans-serif;
+      --ff-mono:   'DM Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: var(--ff-body);
+      background: var(--ink);
+      color: var(--paper);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE TEXTURE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.35;
+    }
+
+    /* ── SCREENS ── */
+    .screen { display: none; min-height: 100vh; position: relative; z-index: 1; }
+    .screen.active { display: block; animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,15,30,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(201,168,76,0.2);
+      padding: 0 1.25rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 56px;
+    }
+    .nav-brand {
+      font-family: var(--ff-head);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.02em;
+      cursor: pointer;
+    }
+    .nav-brand span { color: var(--paper); font-weight: 400; }
+    .nav-back {
+      display: none;
+      background: none; border: 1px solid rgba(201,168,76,0.35);
+      color: var(--gold); font-family: var(--ff-body); font-size: 0.8rem;
+      padding: 0.35rem 0.85rem; border-radius: 20px; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .nav-back:hover { background: rgba(201,168,76,0.1); }
+    .nav-back.visible { display: flex; align-items: center; gap: 0.4rem; }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 3.5rem 1.25rem 2rem;
+      text-align: center;
+      position: relative;
+    }
+    .hero-eyebrow {
+      font-family: var(--ff-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      opacity: 0.8;
+    }
+    .hero h1 {
+      font-family: var(--ff-head);
+      font-size: clamp(2.2rem, 7vw, 3.8rem);
+      font-weight: 900;
+      line-height: 1.1;
+      color: var(--paper);
+      margin-bottom: 0.5rem;
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+    .hero-sub {
+      font-size: 0.95rem;
+      color: var(--mist);
+      line-height: 1.65;
+      max-width: 500px;
+      margin: 1rem auto 0;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 1.5rem 1.25rem 0.75rem;
+      opacity: 0.4;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1;
+      height: 1px; background: var(--gold);
+    }
+    .divider-text {
+      font-family: var(--ff-mono); font-size: 0.65rem;
+      letter-spacing: 0.15em; color: var(--gold); white-space: nowrap;
+    }
+
+    /* ── SECTION CARDS (HOME) ── */
+    .section-grid {
+      padding: 0.5rem 1.25rem 2rem;
+      display: flex; flex-direction: column; gap: 1rem;
+    }
+    .section-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(201,168,76,0.18);
+      border-radius: var(--radius);
+      padding: 1.4rem 1.25rem;
+      cursor: pointer;
+      transition: all 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+    .section-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 3px; height: 100%;
+      background: var(--gold);
+      transform: scaleY(0);
+      transform-origin: bottom;
+      transition: transform 0.25s;
+    }
+    .section-card:hover, .section-card:active {
+      background: rgba(201,168,76,0.08);
+      border-color: rgba(201,168,76,0.4);
+      transform: translateX(4px);
+    }
+    .section-card:hover::before, .section-card:active::before { transform: scaleY(1); }
+    .card-icon { font-size: 1.6rem; margin-bottom: 0.6rem; }
+    .card-label {
+      font-family: var(--ff-mono); font-size: 0.65rem;
+      letter-spacing: 0.15em; color: var(--gold);
+      text-transform: uppercase; margin-bottom: 0.3rem;
+    }
+    .card-title {
+      font-family: var(--ff-head); font-size: 1.2rem;
+      font-weight: 700; color: var(--paper);
+      margin-bottom: 0.4rem;
+    }
+    .card-desc { font-size: 0.83rem; color: var(--mist); line-height: 1.55; }
+    .card-arrow {
+      position: absolute; right: 1.25rem; top: 50%;
+      transform: translateY(-50%);
+      color: var(--gold); font-size: 1.1rem; opacity: 0.5;
+    }
+
+    /* ── DISCLAIMER BANNER ── */
+    .disclaimer-banner {
+      margin: 0 1.25rem 1.5rem;
+      background: rgba(184,74,46,0.12);
+      border: 1px solid rgba(184,74,46,0.35);
+      border-radius: var(--radius);
+      padding: 0.9rem 1rem;
+      font-size: 0.78rem;
+      color: #e8a090;
+      line-height: 1.55;
+    }
+    .disclaimer-banner strong { color: #e8a090; display: block; margin-bottom: 0.3rem; font-family: var(--ff-mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; }
+
+    /* ── INSTALL BUTTON ── */
+    .install-wrap {
+      padding: 0 1.25rem 2rem;
+      text-align: center;
+    }
+    .install-btn {
+      background: var(--gold);
+      color: var(--ink);
+      font-family: var(--ff-body);
+      font-weight: 500;
+      font-size: 0.9rem;
+      border: none;
+      border-radius: 30px;
+      padding: 0.8rem 2rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+    }
+    .install-btn:hover { background: var(--gold-lt); transform: scale(1.02); }
+    .install-hint { font-size: 0.72rem; color: var(--mist); margin-top: 0.5rem; opacity: 0.7; }
+
+    /* ── CONTENT SCREEN ── */
+    .content-header {
+      padding: 2rem 1.25rem 1.25rem;
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+    }
+    .content-header .card-label { margin-bottom: 0.5rem; }
+    .content-header h2 {
+      font-family: var(--ff-head);
+      font-size: clamp(1.6rem, 5vw, 2.4rem);
+      font-weight: 900; line-height: 1.15;
+      color: var(--paper);
+    }
+    .content-header p {
+      margin-top: 0.75rem;
+      font-size: 0.88rem; color: var(--mist); line-height: 1.65;
+    }
+
+    /* ── ACCORDION ── */
+    .accordion-list { padding: 1rem 1.25rem 3rem; }
+    .accordion-item {
+      border: 1px solid rgba(201,168,76,0.15);
+      border-radius: var(--radius);
+      margin-bottom: 0.75rem;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .accordion-item.open { border-color: rgba(201,168,76,0.4); }
+    .accordion-trigger {
+      width: 100%; background: rgba(255,255,255,0.03);
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 1.1rem;
+      text-align: left;
+      transition: background 0.2s;
+    }
+    .accordion-trigger:hover { background: rgba(201,168,76,0.06); }
+    .accordion-item.open .accordion-trigger { background: rgba(201,168,76,0.08); }
+    .acc-title-group { display: flex; align-items: center; gap: 0.75rem; }
+    .acc-icon { font-size: 1.1rem; flex-shrink: 0; }
+    .acc-title {
+      font-family: var(--ff-head);
+      font-size: 1rem; font-weight: 700;
+      color: var(--paper); line-height: 1.25;
+    }
+    .acc-chevron {
+      color: var(--gold); font-size: 0.8rem;
+      transition: transform 0.3s; flex-shrink: 0;
+    }
+    .accordion-item.open .acc-chevron { transform: rotate(180deg); }
+    .accordion-body {
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.4s ease;
+    }
+    .accordion-item.open .accordion-body { max-height: 2000px; }
+    .accordion-content {
+      padding: 0 1.1rem 1.2rem;
+      font-size: 0.86rem; color: var(--mist);
+      line-height: 1.7;
+    }
+    .accordion-content h4 {
+      font-family: var(--ff-head);
+      color: var(--gold); font-size: 0.95rem;
+      margin: 1rem 0 0.4rem;
+    }
+    .accordion-content p { margin-bottom: 0.75rem; }
+    .accordion-content ul { padding-left: 1.25rem; margin-bottom: 0.75rem; }
+    .accordion-content ul li { margin-bottom: 0.4rem; }
+    .accordion-content .warning-box {
+      background: rgba(184,74,46,0.12);
+      border-left: 3px solid var(--rust);
+      border-radius: 0 8px 8px 0;
+      padding: 0.75rem 0.9rem;
+      margin: 0.75rem 0;
+      font-size: 0.82rem; color: #e8a090;
+    }
+    .accordion-content .info-box {
+      background: rgba(201,168,76,0.08);
+      border-left: 3px solid var(--gold);
+      border-radius: 0 8px 8px 0;
+      padding: 0.75rem 0.9rem;
+      margin: 0.75rem 0;
+      font-size: 0.82rem; color: var(--gold-lt);
+    }
+    .deadline-pill {
+      display: inline-block;
+      background: var(--rust);
+      color: white;
+      font-family: var(--ff-mono);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      padding: 0.25rem 0.65rem;
+      border-radius: 20px;
+      margin: 0.25rem 0.2rem 0.25rem 0;
+    }
+    .step-list { counter-reset: steps; padding-left: 0; list-style: none; }
+    .step-list li {
+      counter-increment: steps;
+      display: flex; gap: 0.75rem;
+      margin-bottom: 0.65rem;
+    }
+    .step-list li::before {
+      content: counter(steps);
+      background: var(--slate);
+      color: var(--gold);
+      font-family: var(--ff-mono);
+      font-size: 0.72rem; font-weight: 500;
+      min-width: 1.5rem; height: 1.5rem;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 0.1rem;
+    }
+
+    /* ── DEADLINE CALCULATOR ── */
+    .calc-section {
+      margin: 0 1.25rem 2rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+    }
+    .calc-section h3 {
+      font-family: var(--ff-head);
+      color: var(--gold); font-size: 1.1rem;
+      margin-bottom: 0.35rem;
+    }
+    .calc-section p { font-size: 0.82rem; color: var(--mist); margin-bottom: 1rem; line-height: 1.55; }
+    .calc-label { font-size: 0.78rem; color: var(--mist); margin-bottom: 0.4rem; font-weight: 500; }
+    .calc-input {
+      width: 100%;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(201,168,76,0.3);
+      border-radius: 8px;
+      color: var(--paper);
+      font-family: var(--ff-mono);
+      font-size: 0.9rem;
+      padding: 0.65rem 0.9rem;
+      margin-bottom: 0.85rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .calc-input:focus { border-color: var(--gold); }
+    .calc-btn {
+      width: 100%;
+      background: var(--gold);
+      color: var(--ink);
+      font-family: var(--ff-body);
+      font-weight: 500; font-size: 0.9rem;
+      border: none; border-radius: 8px;
+      padding: 0.75rem; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .calc-btn:hover { background: var(--gold-lt); }
+    .calc-results { margin-top: 1rem; display: none; }
+    .calc-results.show { display: block; }
+    .deadline-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid rgba(201,168,76,0.1);
+      font-size: 0.83rem;
+    }
+    .deadline-row:last-child { border-bottom: none; }
+    .deadline-row .dl-label { color: var(--mist); }
+    .deadline-row .dl-date { font-family: var(--ff-mono); color: var(--gold); font-size: 0.8rem; }
+    .deadline-row .dl-urgent { color: var(--rust); }
+
+    /* ── BOTTOM FOOTER ── */
+    footer {
+      border-top: 1px solid rgba(201,168,76,0.12);
+      padding: 1.5rem 1.25rem;
+      text-align: center;
+      font-size: 0.74rem;
+      color: var(--mist);
+      opacity: 0.6;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">Second<span> Chance</span></div>
+  <button class="nav-back" id="navBack" onclick="goHome()">← Home</button>
+</nav>
+
+<!-- ═══════════════════════════════ HOME SCREEN ═══════════════════════════════ -->
+<div class="screen active" id="screenHome">
+
+  <div class="hero">
+    <div class="hero-eyebrow">Florida Post-Conviction Guide</div>
+    <h1>Second Chance<br/><em>Litigation Manual</em></h1>
+    <p class="hero-sub">A free interactive legal guide built for individuals navigating Florida courts after conviction — written in plain language, built for real situations.</p>
+  </div>
+
+  <div class="disclaimer-banner">
+    <strong>⚠ Legal Disclaimer</strong>
+    This app provides legal <em>information</em>, not legal advice. It does not create an attorney-client relationship. Laws change — always verify deadlines with a licensed Florida attorney or the court directly. The authors are not responsible for outcomes based on this information.
+  </div>
+
+  <div class="divider"><span class="divider-text">Choose a Section</span></div>
+
+  <div class="section-grid">
+
+    <div class="section-card" onclick="showScreen('screenAppellate')">
+      <div class="card-icon">⚖️</div>
+      <div class="card-label">Start Here</div>
+      <div class="card-title">The Appellate Phase</div>
+      <div class="card-desc">From sentencing to the Mandate — understanding your timeline, deadlines, and what happens at every stage of the appeal process.</div>
+      <div class="card-arrow">›</div>
+    </div>
+
+    <div class="section-card" onclick="showScreen('screen3850')">
+      <div class="card-icon">📋</div>
+      <div class="card-label">Florida State Court</div>
+      <div class="card-title">Rule 3.850 — Post-Conviction</div>
+      <div class="card-desc">The full history, all exceptions, new rules, and a step-by-step guide to filing your motion in Florida state court.</div>
+      <div class="card-arrow">›</div>
+    </div>
+
+    <div class="section-card" onclick="showScreen('screen1983')">
+      <div class="card-icon">🏛️</div>
+      <div class="card-label">Federal Civil Rights</div>
+      <div class="card-title">§ 1983 Civil Rights Claims</div>
+      <div class="card-desc">What § 1983 can and cannot do, the PLRA, exhaustion requirements, and how to decide if your claim is worth pursuing.</div>
+      <div class="card-arrow">›</div>
+    </div>
+
+    <div class="section-card" onclick="showScreen('screenHabeas')">
+      <div class="card-icon">🗝️</div>
+      <div class="card-label">Federal Court</div>
+      <div class="card-title">Federal Habeas — § 2254</div>
+      <div class="card-desc">AEDPA deadlines, exhaustion, procedural default traps, and how to bring your state case into federal court.</div>
+      <div class="card-arrow">›</div>
+    </div>
+
+    <div class="section-card" onclick="showScreen('screenTools')">
+      <div class="card-icon">🔧</div>
+      <div class="card-label">Tools</div>
+      <div class="card-title">Deadline Calculator & Checklists</div>
+      <div class="card-desc">Enter your sentencing date and get every deadline calculated automatically. Plus pre-filing checklists for each motion type.</div>
+      <div class="card-arrow">›</div>
+    </div>
+
+  </div>
+
+  <div class="install-wrap">
+    <button class="install-btn" id="installBtn" style="display:none" onclick="installApp()">
+      📲 Install This App
+    </button>
+    <p class="install-hint">Works offline after first visit. No app store required.</p>
+  </div>
+
+  <footer>
+    Second Chance Litigation Manual<br/>
+    Created for pro se litigants navigating Florida courts.<br/>
+    Not affiliated with any government agency or law firm.
+  </footer>
+</div>
+
+<!-- ═══════════════════════════════ APPELLATE SCREEN ═══════════════════════════════ -->
+<div class="screen" id="screenAppellate">
+  <div class="content-header">
+    <div class="card-label">⚖️ Start Here</div>
+    <h2>The Appellate Phase</h2>
+    <p>From the moment the judge imposes your sentence, the clock starts. This section walks you through every stage — what happens, when it happens, and what <em>you</em> must do.</p>
+  </div>
+
+  <div class="accordion-list">
+
+    <div class="accordion-item" id="acc-a1">
+      <button class="accordion-trigger" onclick="toggleAcc('acc-a1')">
+        <div class="acc-title-group">
+          <span class="acc-icon">🎯</span>
+          <span class="acc-title">What Is the Appellate Phase?</span>
+        </div>
+        <span class="acc-chevron">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-content">
+          <p>The appellate phase begins the moment you are sentenced. It is the process by which a higher court reviews your case for legal errors made during trial or sentencing.</p>
+          <p>Think of it this way: the trial court was where the facts were decided. The appellate court is where the <em>law</em> is reviewed. You are not re-trying your case — you are arguing that the judge, prosecutor, or your own attorney made legal mistakes that affected your outcome.</p>
+          <div class="info-box">
+            💡 The appellate phase is the <strong>foundation</strong> of everything that comes after — including Rule 3.850, § 1983, and Federal Habeas. You must understand this phase first.
+          </div>
+          <h4>The Chain of Review</h4>
+          <ul>
+            <li><strong>Trial Court</strong> → where you were convicted and sentenced</li>
+            <li><strong>Florida District Court of Appeal (DCA)</strong> → first appellate stop</li>
+            <li><strong>Florida Supreme Court</strong> → discretionary review (not automatic)</li>
+            <li><strong>U.S. Supreme Court</strong> → certiorari (extremely rare)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item" id="acc-a2">
+      <button class="accordion-trigger" onclick="toggleAcc('acc-a2')">
+        <div class="acc-title-group">
+          <span class="acc-icon">📅</span>
+          <span class="acc-title">Sentencing Day — What Happens & What Starts</span>
+        </div>
+        <span class="acc-chevron">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-content">
+          <p>The moment the judge pronounces sentence, your appeal rights are triggered. Here is what you need to know immediately:</p>
+          <div class="warning-box">
+            ⏱️ <strong>CRITICAL:</strong> You have <strong>30 days</strong> from the date of sentencing to file your Notice of Appeal in Florida state court. Missing this deadline can permanently end your right to a direct appeal.
+          </div>
+          <h4>What Your Attorney Should Do (But Often Doesn't)</h4>
+          <ul>
+            <li>File the Notice of Appeal within 30 days</li>
+            <li>Order the trial transcripts for the appellate record</li>
+            <li>Notify you of any deadlines and your appellate rights</li>
+            <li>If they do not do this, this itself may become a ground for post-conviction relief</li>
+          </ul>
+          <h4>If You Are Pro Se (No Attorney)</h4>
+          <p>You can file the Notice of Appeal yourself. It is a short form filed with the trial court clerk. Ask the clerk for the form or write a simple letter titled "Notice of Appeal" stating you appeal your conviction and sentence. File it immediately — do not wait.</p>
+          <span class="deadline-pill">⏰ 30 DAYS — Notice of Appeal</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item" id="acc-a3">
+      <button class="accordion-trigger" onclick="toggleAcc('acc-a3')">
+        <div class="acc-title-group">
+          <span class="acc-icon">📜</span>
+          <span class="acc-title">The Direct Appeal — Step by Step</span>
+        </div>
+        <span class="acc-chevron">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-content">
+          <p>After the Notice of Appeal is filed, the direct appeal process unfolds in stages. Each stage has its own deadlines.</p>
+          <ol class="step-list">
+            <li><strong>Notice of Appeal filed</strong> — Case moves from trial court to the DCA</li>
+            <li><strong>Record on Appeal assembled</strong> — Clerk compiles transcripts, orders, motions from your trial</li>
+            <li><strong>Initial Brief filed by Appellant (you)</strong> — Your arguments about what went wrong at trial. This is the most important document in your appeal.</li>
+            <li><strong>Answer Brief filed by State</strong> — The prosecution responds to your arguments</li>
+            <li><strong>Reply Brief (optional)</strong> — You respond to the State's Answer Brief</li>
+            <li><strong>Oral Argument (rare)</strong> — Court may or may not schedule argument. Most appeals are decided on the briefs alone.</li>
+            <li><strong>Decision issued</strong> — Court affirms, reverses, or remands your case</li>
+            <li><strong>Mandate issues</strong> — The final step. See the next section.</li>
+          </ol>
+          <div class="info-box">
+            📌 The entire direct appeal process in Florida typically takes <strong>12–24 months</strong> from Notice of Appeal to decision.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item" id="acc-a4">
+      <button class="accordion-trigger" onclick="toggleAcc('acc-a4')">
+        <div class="acc-title-group">
+          <span class="acc-icon">🔖</span>
+          <span class="acc-title">The Mandate — What It Is and Why It Matters</span>
+        </div>
+        <span class="acc-chevron">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-content">
+          <p>The <strong>Mandate</strong> is the official document the appellate court issues after it has made its final decision and all time for further review has passed. It sends the case back to the trial court with the appellate court's instructions.</p>
+          <div class="warning-box">
+            🚨 <strong>The Mandate is your starting gun.</strong> Most post-conviction deadlines — including your 2-year Rule 3.850 clock and your 1-year Federal Habeas clock — do not start until your conviction "becomes final," which is generally tied to when the Mandate issues or when time for seeking further review expires.
+          </div>
+          <h4>When Does a Conviction Become "Final"?</h4>
+          <ul>
+            <li>If you <strong>did not petition the Florida Supreme Court</strong>: conviction becomes final when the DCA Mandate issues (typically 15 days after the DCA decision if no motion for rehearing is filed)</li>
+            <li>If you <strong>petitioned the Florida Supreme Court</strong> and it declined: final when the Florida Supreme Court denies review</li>
+            <li>If you <strong>petitioned the U.S. Supreme Court</strong>: final when cert is denied or the 90-day window to file cert closes</li>
+          </ul>
+          <h4>How to Get a Copy of Your Mandate</h4>
+          <ul>
+            <li>Contact the Clerk of the DCA that handled your appeal</li>
+            <li>Request a certified copy of the Mandate in writing</li>
+            <li>Keep this document — you will need it to calculate every future deadline</li>
+          </ul>
+          <span class="deadline-pill">📌 GET YOUR MANDATE DATE IN WRITING</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item" id="acc-a5">
+      <button class="accordion-trigger" onclick="toggleAcc('acc-a5')">
+        <div class="acc-title-group">
+          <span class="acc-icon">⏳</span>
+          <span class="acc-title">Calculating Your Deadlines After the Mandate</span>
+        </div>
+        <span class="acc-chevron">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-content">
+          <p>Once your conviction is final, multiple clocks start running simultaneously. Missing any one of them can permanently bar your claim.</p>
+
+          <h4>Florida Deadlines (State Court)</h4>
+          <ul>
+            <li><strong>Rule 3.850 Motion</strong> — <span class="deadline-pill">2 YEARS</span> from conviction becoming final</li>
+            <li><strong>Rule 3.800(a)</strong> — Illegal sentence challenges — No deadline (can file anytime)</li>
+            <li><strong>Rule 3.800(b)</strong> — Must be filed before the appeal is final</li>
+          </ul>
+
+          <h4>Federal Deadlines</h4>
+          <ul>
+            <li><strong>Federal Habeas § 2254 (AEDPA)</strong> — <span class="deadline-pill">1 YEAR</span> from conviction becoming final</li>
+            <li>⚠️ A properly filed state post-conviction motion (like 3.850) <strong>tolls (pauses) the federal clock</strong> while it is pending — but only if filed before the 1-year federal deadline runs out</li>
+          </ul>
+
+          <div class="warning-box">
+            🚨 <strong>Critical Trap:</strong> Many people wait too long to file their 3.850, not realizing their federal clock is running at the same time. File your 3.850 BEFORE the 1-year federal deadline to preserve your federal rights. Use the Deadline Calculator in the Tools section.
+          </div>
+
+          <h4>The Relationship Between Clocks</h4>
+          <p>Think of it like two hourglasses running at the same time. You have a 2-year Florida hourglass and a 1-year federal hourglass. Filing your 3.850 within the first year pauses the federal hourglass — but if that hourglass runs out before you file anything, it is gone forever.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item" id="acc-a6">
+      <button class="accordion-trigger" onclick="toggleAcc('acc-a6')">
+        <div class="acc-title-group">
+          <span class="acc-icon">❌</span>
+          <span class="acc-title">Common Mistakes That Kill Appeals</span>
+        </div>
+        <span class="acc-chevron">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-content">
+          <ul>
+            <li><strong>Missing the 30-day Notice of Appeal deadline</strong> — This is almost always fatal to your direct appeal. Courts rarely grant extensions.</li>
+            <li><strong>Not preserving issues at trial</strong> — If your attorney did not object to something at trial, the appellate court may refuse to review it (called "procedural default").</li>
+            <li><strong>Raising new facts on direct appeal</strong> — The appellate court only reviews what happened at trial. New evidence belongs in a 3.850, not a direct appeal.</li>
+            <li><strong>Confusing which court to file in</strong> — Direct appeals go to the DCA, not the trial court and not the Florida Supreme Court.</li>
+            <li><strong>Waiting until after the federal deadline to file state motions</strong> — You must file your 3.850 within the first year to toll your federal clock.</li>
+            <li><strong>Filing in the wrong format</strong> — Florida courts have specific formatting requirements for briefs. Improperly formatted briefs can be struck.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ RULE 3.850 SCREEN ═══════════════════════════════ -->
+<div class="screen" id="screen3850">
+  <div class="content-header">
+    <div class="card-label">📋 Florida State Court</div>
+    <h2>Rule 3.850<br/>Post-Conviction Relief</h2>
+    <p>Florida Rule of Criminal Procedure 3.850 is the primary vehicle for raising constitutional claims that could not be raised on direct appeal — including ineffective assistance of counsel, newly discovered evidence, and more.</p>
+  </div>
+
+  <div class="accordion-list">
+
+    <div class="accordion-item" id="acc-b1">
+      <button class="accordion-trigger" onclick="toggleAcc('acc-b1')">
+        <div class="acc-title-group">
+          <span class="acc-icon">📖</span>
+          <span class="acc-title">History: From Rule 1 to Modern 3.850</span>
+        </div>
+        <span class="acc-chevron">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-content">
+          <p>To understand 3.850, you need to understand where it came from. Early post-conviction claims were filed as habeas corpus petitions directly in federal court — there was no structured state remedy.</p>
+          <p>The U.S. Supreme Court's landmark decision in <strong>Gideon v. Wainwright (1963)</strong> established the right to appointed counsel, which created an explosion of ineffective assistance claims. Courts needed a mechanism to force defendants to exhaust state remedies before reaching federal court.</p>
+          <p>Florida's Rule 3.850 was developed specifically to create a structured state-court process for post-conviction claims — keeping those claims in state court first, and reducing the federal court's burden. It has been amended significantly, particularly in the last 15 years, adding stricter procedural requirements and new grounds.</p>
+          <div class="info-box">
+            📌 Key Cases that shaped 3.850: <strong>Strickland v. Washington (1984)</strong> established the two-prong test for ineffective assistance of counsel that is still used today.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item" id="acc-b2">
+      <button class="accordion-trigger" onclick="toggleAcc('acc-b2')">
+        <div class="acc-title-group">
+          <span class="acc-icon">📅</span>
+          <span class="acc-title">Deadlines & Exceptions</span>
+        </div>
+        <span class="acc-chevron">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-content">
+          <span class="deadline-pill">⏰ 2 YEARS — Standard Deadline</span>
+          <p style="margin-top:0.75rem">The standard deadline to file a Rule 3.850 motion is <strong>2 years</strong> from the date your conviction becomes final (when your direct appeal Mandate issues and all further review is exhausted).</p>
+
+          <h4>Exceptions to the 2-Year Deadline</h4>
+          <ul>
+            <li><strong>Newly Discovered Evidence</strong> — Evidence that was not available at trial and could not have been discovered with due diligence. Must be filed within 2 years of discovering the evidence.</li>
+            <li><strong>New Constitutional Right</strong> — A newly recognized constitutional right that applies retroactively to your case. Must be filed within 2 years of the decision creating that right.</li>
+            <li><strong>Illegal Sentence</strong> — A sentence that exceeds the maximum allowed by law can be challenged at any time under Rule 3.800(a).</li>
+            <li><strong>Fundamental Error</strong> — Some courts recognize exceptions for egregious constitutional violations — this is narrow and fact-specific.</li>
+          </ul>
+          <div class="warning-box">
+            ⚠️ Courts strictly enforce the 2-year deadline. Claiming you did not know about the deadline is NOT an exception. File early — do not wait.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item" id="acc-b3">
+      <button class="accordion-trigger" onclick="toggleAcc('acc-b3')">
+        <div class="acc-title-group">
+          <span class="acc-icon">⚖️</span>
+          <span class="acc-title">Grounds for Relief (What You Can Argue)</span>
+        </div>
+        <span class="acc-chevron">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-content">
+          <ul>
+            <li><strong>Ineffective Assistance of Counsel (IAC)</strong> — Your attorney's performance was so deficient that it affected the outcome. This is the most common ground. You must meet both prongs of <em>Strickland</em>: (1) deficient performance and (2) prejudice.</li>
+            <li><strong>Newly Discovered Evidence</strong> — New evidence that probably would have produced an acquittal</li>
+            <li><strong>Newly Recognized Constitutional Right</strong> — A right the U.S. or Florida Supreme Court recognized after your conviction that applies retroactively</li>
+            <li><strong>Prosecutorial Misconduct</strong> — Brady violations (suppressed evidence), Giglio violations (false testimony)</li>
+            <li><strong>Involuntary Plea</strong> — Your guilty plea was not knowing, intelligent, or voluntary</li>
+            <li><strong>Illegal Sentence</strong> — Sentence exceeds what the law allows</li>
+          </ul>
+          <div class="info-box">
+            📌 You CANNOT use 3.850 to relitigate facts or issues that were already raised and decided on direct appeal.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ § 1983 SCREEN ═══════════════════════════════ -->
+<div class="screen" id="screen1983">
+  <div class="content-header">
+    <div class="card-label">🏛️ Federal Civil Rights</div>
+    <h2>42 U.S.C. § 1983<br/>Civil Rights Claims</h2>
+    <p>Section 1983 is a federal law that lets individuals sue state officials who violated their constitutional rights. It is powerful — but it has significant limits for incarcerated people.</p>
+  </div>
+
+  <div class="accordion-list">
+
+    <div class="accordion-item" id="acc-c1">
+      <button class="accordion-trigger" onclick="toggleAcc('acc-c1')">
+        <div class="acc-title-group">
+          <span class="acc-icon">💡</span>
+          <span class="acc-title">What Is § 1983 — Plain English</span>
+        </div>
+        <span class="acc-chevron">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-content">
+          <p>Section 1983 was passed after the Civil War to allow citizens to sue government officials who violated their constitutional rights. The name "1983" refers to its location in the U.S. Code — Title 42, Section 1983.</p>
+          <p>It is not a right itself — it is a <em>vehicle</em> to enforce rights you already have under the U.S. Constitution. Think of it like a hammer: the nail is the constitutional violation, and § 1983 is the tool you use to hit it in court.</p>
+          <h4>What You Need to Prove</h4>
+          <ol class="step-list">
+            <li>A person acting "under color of state law" (a government official, officer, employee)</li>
+            <li>Deprived you of a right guaranteed by the U.S. Constitution or federal law</li>
+          </ol>
+          <div class="info-box">
+            📌 In Florida, the statute of limitations for § 1983 claims is <strong>4 years</strong> (Florida's general personal injury statute applies).
+          </div>
+          <span class="deadline-pill">⏰ 4 YEARS — Florida § 1983 Deadline</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item" id="acc-c2">
+      <button class="accordion-trigger" onclick="toggleAcc('acc-c2')">
+        <div class="acc-title-group">
+          <span class="acc-icon">✅</span>
+          <span class="acc-title">What § 1983 CAN Do for You</span>
+        </div>
+        <span class="acc-chevron">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-content">
+          <ul>
+            <li><strong>Excessive Force</strong> — Officers used more force than the situation required</li>
+            <li><strong>Deliberate Indifference to Medical Needs</strong> — Prison officials knowingly ignored a serious medical condition</li>
+            <li><strong>Conditions of Confinement</strong> — Inhumane living conditions violating the 8th Amendment</li>
+            <li><strong>First Amendment Violations</strong> — Retaliation for filing grievances, restrictions on mail or religious practice</li>
+            <li><strong>Due Process Violations</strong> — Disciplinary proceedings without proper notice or hearing</li>
+            <li><strong>Equal Protection Violations</strong> — Discrimination based on race, religion, or other protected classes</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item" id="acc-c3">
+      <button class="accordion-trigger" onclick="toggleAcc('acc-c3')">
+        <div class="acc-title-group">
+          <span class="acc-icon">❌</span>
+          <span class="acc-title">What § 1983 CANNOT Do</span>
+        </div>
+        <span class="acc-chevron">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-content">
+          <div class="warning-box">
+            ⚠️ This is where most people get confused. Section 1983 CANNOT be used to challenge your conviction or sentence. That is what habeas corpus is for.
+          </div>
+          <ul>
+            <li><strong>Cannot challenge your conviction</strong> — If you want out of prison, use habeas (§ 2254)</li>
+            <li><strong>Cannot sue the state itself</strong> — States have 11th Amendment immunity. You sue individual officials.</li>
+            <li><strong>Cannot sue federal officials</strong> — § 1983 only applies to state actors. Federal officers are covered by <em>Bivens</em> claims (a separate and much harder path)</li>
+            <li><strong>Cannot get money from officials in their "official capacity"</strong> — You can get money from them in their personal/individual capacity only</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item" id="acc-c4">
+      <button class="accordion-trigger" onclick="toggleAcc('acc-c4')">
+        <div class="acc-title-group">
+          <span class="acc-icon">🔒</span>
+          <span class="acc-title">The PLRA — The Law That Complicates Everything</span>
+        </div>
+        <span class="acc-chevron">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-content">
+          <p>The <strong>Prison Litigation Reform Act (PLRA)</strong>, passed in 1996, was designed to reduce "frivolous" lawsuits by prisoners. In practice, it created significant barriers even for legitimate claims.</p>
+          <h4>PLRA Requirements You Must Know</h4>
+          <ul>
+            <li><strong>Exhaustion of Administrative Remedies</strong> — You MUST complete the entire prison grievance process before filing in court. No exceptions. Courts will dismiss your case if you skipped any step — even if the grievance process is unfair or futile.</li>
+            <li><strong>Three Strikes Rule</strong> — If you have had 3 prior lawsuits dismissed as frivolous, malicious, or for failure to state a claim, you cannot file in forma pauperis (for free) in the future — unless you are in "imminent danger of serious physical injury."</li>
+            <li><strong>Physical Injury Requirement</strong> — For most compensatory damages claims, you must show a physical injury. Emotional distress alone is generally not enough.</li>
+            <li><strong>Filing Fees</strong> — Even if you proceed in forma pauperis, you still owe the full filing fee — it is just collected over time from your prison account.</li>
+          </ul>
+          <div class="warning-box">
+            🚨 The exhaustion requirement is the #1 reason prisoner § 1983 cases get dismissed. Document every grievance, keep copies, and complete every level of the process before filing in court.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ HABEAS SCREEN ═══════════════════════════════ -->
+<div class="screen" id="screenHabeas">
+  <div class="content-header">
+    <div class="card-label">🗝️ Federal Court</div>
+    <h2>Federal Habeas<br/>28 U.S.C. § 2254</h2>
+    <p>Federal habeas corpus is the last resort for state prisoners to challenge their conviction or sentence in federal court. The rules are strict, the deadlines are absolute, and the traps are everywhere.</p>
+  </div>
+
+  <div class="accordion-list">
+
+    <div class="accordion-item" id="acc-d1">
+      <button class="accordion-trigger" onclick="toggleAcc('acc-d1')">
+        <div class="acc-title-group">
+          <span class="acc-icon">⏳</span>
+          <span class="acc-title">AEDPA — The 1-Year Deadline Explained</span>
+        </div>
+        <span class="acc-chevron">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-content">
+          <p>The <strong>Antiterrorism and Effective Death Penalty Act of 1996 (AEDPA)</strong> imposed a strict 1-year statute of limitations on federal habeas petitions. Before AEDPA, there was no deadline.</p>
+          <span class="deadline-pill">⏰ 1 YEAR — AEDPA Federal Deadline</span>
+          <h4>When Does the 1 Year Start?</h4>
+          <p>The clock starts from the latest of:</p>
+          <ul>
+            <li>The date your conviction becomes final on direct review</li>
+            <li>The date a state-created impediment to filing is removed</li>
+            <li>The date the U.S. Supreme Court recognized a new constitutional right that applies retroactively</li>
+            <li>The date you discovered (or could have discovered) the factual basis of your claim</li>
+          </ul>
+          <h4>Tolling — What Pauses the Clock</h4>
+          <p>A "properly filed" state post-conviction motion (like a 3.850) <strong>tolls (stops) the federal clock</strong> while it is pending in state court. But two critical warnings:</p>
+          <div class="warning-box">
+            🚨 1. The state motion must be filed BEFORE the 1-year federal clock expires. If you wait until after the year runs, your state filing cannot revive a dead clock.<br/><br/>
+            🚨 2. The motion must be "properly filed" — if the state court rejects it as untimely, it does NOT toll the federal clock.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item" id="acc-d2">
+      <button class="accordion-trigger" onclick="toggleAcc('acc-d2')">
+        <div class="acc-title-group">
+          <span class="acc-icon">🔄</span>
+          <span class="acc-title">Exhaustion — You Must Go Through State Court First</span>
+        </div>
+        <span class="acc-chevron">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-content">
+          <p>Before a federal court will hear your habeas petition, you must "exhaust" your state court remedies. This means you must have raised every claim you want to raise in federal court through the state courts first — all the way to the highest state court available to you.</p>
+          <h4>What Exhaustion Requires</h4>
+          <ul>
+            <li>You raised the claim on direct appeal <em>and/or</em> in a state post-conviction motion (3.850)</li>
+            <li>You appealed the denial of your 3.850 all the way through the DCA</li>
+            <li>The state courts had a "full and fair opportunity" to address the constitutional issue</li>
+          </ul>
+          <div class="warning-box">
+            ⚠️ If you raise a claim in federal court that you never raised in state court, the federal court will dismiss it as unexhausted — or worse, find it procedurally defaulted, which can permanently bar the claim.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ TOOLS SCREEN ═══════════════════════════════ -->
+<div class="screen" id="screenTools">
+  <div class="content-header">
+    <div class="card-label">🔧 Tools</div>
+    <h2>Deadline Calculator</h2>
+    <p>Enter your sentencing date below to calculate your key post-conviction filing deadlines. Always verify with an attorney or the court clerk.</p>
+  </div>
+
+  <div class="calc-section">
+    <h3>⏰ Calculate Your Deadlines</h3>
+    <p>Enter the date your conviction became final (when your direct appeal Mandate issued, or if no appeal — your sentencing date).</p>
+    <div class="calc-label">Date Conviction Became Final</div>
+    <input type="date" class="calc-input" id="calcDate" />
+    <button class="calc-btn" onclick="calcDeadlines()">Calculate My Deadlines</button>
+
+    <div class="calc-results" id="calcResults">
+      <div class="deadline-row">
+        <span class="dl-label">Rule 3.850 Deadline (2 years)</span>
+        <span class="dl-date" id="dl3850">—</span>
+      </div>
+      <div class="deadline-row">
+        <span class="dl-label">Federal Habeas AEDPA (1 year)</span>
+        <span class="dl-date dl-urgent" id="dlAedpa">—</span>
+      </div>
+      <div class="deadline-row">
+        <span class="dl-label">§ 1983 Civil Rights (4 years)</span>
+        <span class="dl-date" id="dl1983">—</span>
+      </div>
+      <div class="deadline-row">
+        <span class="dl-label">Days Until AEDPA Expires</span>
+        <span class="dl-date dl-urgent" id="dlDays">—</span>
+      </div>
+      <div class="info-box" style="margin-top:0.75rem; font-size:0.78rem">
+        ⚠️ These are estimates only. Consult an attorney or the clerk to verify your exact deadline dates. Tolling from state filings can affect the federal deadline.
+      </div>
+    </div>
+  </div>
+
+  <div style="padding: 0 1.25rem 3rem;">
+    <div class="divider"><span class="divider-text">Pre-Filing Checklist</span></div>
+
+    <div class="accordion-item" id="acc-e1" style="margin-top:1rem">
+      <button class="accordion-trigger" onclick="toggleAcc('acc-e1')">
+        <div class="acc-title-group">
+          <span class="acc-icon">✅</span>
+          <span class="acc-title">Before You File a Rule 3.850</span>
+        </div>
+        <span class="acc-chevron">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-content">
+          <ul>
+            <li>☐ You have a copy of your Mandate (or know the date your conviction became final)</li>
+            <li>☐ You are within the 2-year deadline (or have a valid exception)</li>
+            <li>☐ Your claim was NOT already raised on direct appeal</li>
+            <li>☐ You have identified a specific constitutional ground (not just "I'm innocent")</li>
+            <li>☐ If claiming IAC — you can identify both deficient performance AND prejudice</li>
+            <li>☐ You have filed your motion in the correct court (the trial court that sentenced you)</li>
+            <li>☐ Your motion meets Florida's formatting requirements</li>
+            <li>☐ You have kept a copy of everything you filed</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item" id="acc-e2" style="margin-top:0.75rem">
+      <button class="accordion-trigger" onclick="toggleAcc('acc-e2')">
+        <div class="acc-title-group">
+          <span class="acc-icon">✅</span>
+          <span class="acc-title">Before You File a § 1983 Claim</span>
+        </div>
+        <span class="acc-chevron">▼</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-content">
+          <ul>
+            <li>☐ You have exhausted ALL levels of the prison grievance process</li>
+            <li>☐ You have copies of every grievance filed and every response received</li>
+            <li>☐ You are within the 4-year Florida statute of limitations</li>
+            <li>☐ Your claim involves a state (not federal) actor</li>
+            <li>☐ You are NOT trying to challenge your conviction (use habeas for that)</li>
+            <li>☐ You have identified the specific constitutional right that was violated</li>
+            <li>☐ You have checked whether you have 3 prior strikes under the PLRA</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ SCRIPTS ═══════════════════════════════ -->
+<script>
+  // ── Screen Navigation ──
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.getElementById('navBack').classList.add('visible');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  function goHome() {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screenHome').classList.add('active');
+    document.getElementById('navBack').classList.remove('visible');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── Accordion ──
+  function toggleAcc(id) {
+    const item = document.getElementById(id);
+    const isOpen = item.classList.contains('open');
+    item.classList.toggle('open', !isOpen);
+  }
+
+  // ── Deadline Calculator ──
+  function calcDeadlines() {
+    const input = document.getElementById('calcDate').value;
+    if (!input) { alert('Please enter a date.'); return; }
+    const base = new Date(input + 'T00:00:00');
+    const fmt = d => d.toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' });
+
+    const aedpa = new Date(base); aedpa.setFullYear(aedpa.getFullYear() + 1);
+    const r3850 = new Date(base); r3850.setFullYear(r3850.getFullYear() + 2);
+    const s1983 = new Date(base); s1983.setFullYear(s1983.getFullYear() + 4);
+
+    const today = new Date();
+    const daysLeft = Math.ceil((aedpa - today) / (1000*60*60*24));
+
+    document.getElementById('dlAedpa').textContent = fmt(aedpa);
+    document.getElementById('dl3850').textContent = fmt(r3850);
+    document.getElementById('dl1983').textContent = fmt(s1983);
+    document.getElementById('dlDays').textContent = daysLeft > 0 ? daysLeft + ' days remaining' : 'EXPIRED';
+
+    document.getElementById('calcResults').classList.add('show');
+  }
+
+  // ── PWA Install Prompt ──
+  let deferredPrompt;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    document.getElementById('installBtn').style.display = 'inline-flex';
+  });
+  function installApp() {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
+    }
+  }
+</script>
+
+</body>
+</html>
