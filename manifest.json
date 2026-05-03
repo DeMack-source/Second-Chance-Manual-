@@ -2,7 +2,7 @@
   "name": "Second Chance Litigation Manual",
   "short_name": "Second Chance",
   "description": "A free interactive legal guide for Florida post-conviction appellate proceedings. Built for pro se litigants navigating the system after conviction.",
-  "start_url": "./second-chance-manual.html",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
